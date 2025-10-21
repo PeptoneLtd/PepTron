@@ -50,12 +50,18 @@ protein1,MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQA
 protein2,MSHHWGYGKHNGPEHWHKDFPIAKGERQSPVDID
 ```
 
+#### 3. Download checkpoint
+
+Download `PepTron.tar.gz` from [here](https://zenodo.org/records/17306061) and unzip it.
+
+The `peptron-checkpoint` directory is your checkpoint.
+
 #### 3. Run Inference
 
 Using the convenience script:
 ```bash
 # Edit run_peptron_infer.sh with your paths
-export CKPT_PATH="/path/to/your/checkpoint"
+export CKPT_PATH="/path/to/the/peptron-checkpoint"
 export RESULTS_PATH="/path/to/results"
 export CSV_FILE="/path/to/sequences.csv"
 
