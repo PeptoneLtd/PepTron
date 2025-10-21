@@ -32,12 +32,13 @@ python -m peptron.pt_to_structure -i "$RESULTS_PATH" \
     -o "$RESULTS_PATH/ensembles" \
     -p 96
 
-# comment out the following lines only if you don't need to filter out unphysical conformations
-mkdir -p "$RESULTS_PATH/physical_ensembles"
-for trajectory_file in "$RESULTS_PATH/ensembles/"*.pdb; do
-    [ -e "$trajectory_file" ] || continue
-    base_name=$(basename "$trajectory_file" .pdb)
-    output_file="$RESULTS_PATH/physical_ensembles/${base_name}_filtered.pdb"
-    echo "Processing: $trajectory_file"
-    python -m peptron.utils.filter_unphysical_traj --trajectory "$trajectory_file" --outfile "$output_file"
-done
+# uncomment out the following lines only if you need to filter out unphysical conformations
+
+# mkdir -p "$RESULTS_PATH/physical_ensembles"
+# for trajectory_file in "$RESULTS_PATH/ensembles/"*.pdb; do
+#     [ -e "$trajectory_file" ] || continue
+#     base_name=$(basename "$trajectory_file" .pdb)
+#    output_file="$RESULTS_PATH/physical_ensembles/${base_name}_filtered.pdb"
+#     echo "Processing: $trajectory_file"
+#     python -m peptron.utils.filter_unphysical_traj --trajectory "$trajectory_file" --outfile "$output_file"
+# done
