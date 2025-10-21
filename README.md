@@ -56,7 +56,7 @@ Download `PepTron.tar.gz` from [here](https://zenodo.org/records/17306061) and u
 
 The `peptron-checkpoint` directory is your checkpoint.
 
-#### 3. Run Inference
+#### 4. Run Inference
 
 Using the convenience script:
 ```bash
