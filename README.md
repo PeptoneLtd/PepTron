@@ -168,9 +168,12 @@ Key parameters you can modify in the inference configuration:
 
 - `samples`: Number of ensemble conformations to generate (default: 100)
 - `steps`: Number of diffusion denoising steps (default: 10)
-- `max_batch_size`: Number of structures generated in parallel for each predicted ensemble
+- `max_batch_size`: Number of structures generated in parallel for each predicted ensemble (default: 1)
+- `num_gpus` : Number of GPUs PepTron will use during inference (default: 8)
 
-**NOTE:** The longer the sequence and the smaller `max_batch_size` has to be to avoid Out-Of-Memory errors. We set the default to 1 
+**NOTE1:** The `num_gpus` parameter has to be <= the number of sequences in your CSV_FILE
+
+**NOTE2:** The longer the sequence and the smaller `max_batch_size` has to be to avoid Out-Of-Memory errors. We set the default to 1 
 as safe configuration but we encourage to increase it based on your GPU memory and max-sequence-length. The bigger the
 ensemble you want to generate and the more you want to increase this parameter.
 

@@ -9,9 +9,9 @@ export PYTHONPATH=.
 # num_gpus = min(N, n_gpus_available) with N=len(CSV_FILE)
 # max_batch_size=k*num_gpus with k positive integer and k<=N
 
-CKPT_PATH="<path-to-ckpt>"
-RESULTS_PATH="<path-to-results-dir>"
-CSV_FILE="<path-to-csv-with-sequences-to-be-predicted>"
+CKPT_PATH="/mnt/data/checkpoints/peptron-stable-pdb-20250809/peptron-stable-pdb-20250809//dev/checkpoints/epoch=0-step=3699-consumed_samples=236800.0-last"
+RESULTS_PATH="/mnt/data/this-is-a-test"
+CSV_FILE="/mnt/data/datasets/splits/test-one.csv"
 
 python -m peptron.infer \
     --config.inference.num_nodes 1 \
@@ -19,18 +19,14 @@ python -m peptron.infer \
     --config.inference.chains_path $CSV_FILE \
     --config.inference.results_path $RESULTS_PATH \
     --config.inference.num_gpus 1 \
-    --config.inference.pipeline_model_parallel_size 1 \
-    --config.inference.tensor_model_parallel_size 1 \
-    --config.inference.micro_batch_size 1 \
     --config.inference.max_batch_size 1 \
     --config.inference.num_workers 8 \
-    --config.inference.samples 100 \
-    --config.inference.steps 10 \
-    --config.inference.tmax 1
+    --config.inference.samples 10 \
+    --config.inference.steps 10
 
 python -m peptron.pt_to_structure -i "$RESULTS_PATH" \
     -o "$RESULTS_PATH/ensembles" \
-    -p 96
+    -p $(($(nproc) / 2))
 
 # comment out the following lines only if you don't need to filter out unphysical conformations
 mkdir -p "$RESULTS_PATH/physical_ensembles"
