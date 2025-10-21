@@ -166,10 +166,10 @@ sh run_peptron_distributed_train.sh
 
 Key parameters you can modify in the inference configuration:
 
-- `samples`: Number of ensemble conformations to generate (default: 100)
+- `samples`: Number of ensemble conformations to generate (default: 10)
 - `steps`: Number of diffusion denoising steps (default: 10)
 - `max_batch_size`: Number of structures generated in parallel for each predicted ensemble (default: 1)
-- `num_gpus` : Number of GPUs PepTron will use during inference (default: 8)
+- `num_gpus` : Number of GPUs PepTron will use during inference (default: 1)
 
 **NOTE1:** The `num_gpus` parameter has to be <= the number of sequences in your CSV_FILE
 
