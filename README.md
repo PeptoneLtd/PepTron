@@ -91,7 +91,9 @@ To download and preprocess the PDB:
 
 ##### IDRome-o Dataset
 
-To download and preprocess the IDRome-o dataset (samples created with [https://github.com/PeptoneLtd/IDP-o](https://github.com/PeptoneLtd/IDP-o)):
+The IDRome-o dataset has been created predicting the ensembles of the sequences in [IDRome](https://github.com/KULL-Centre/_2023_Tesei_IDRome) for respectively [training](https://github.com/PeptoneLtd/PepTron/blob/main/splits/IDRome_DB-train.csv) and [validation](https://github.com/PeptoneLtd/PepTron/blob/main/splits/IDRome_DB-val.csv) with [https://github.com/PeptoneLtd/IDP-o](https://github.com/PeptoneLtd/IDP-o).
+
+To download and preprocess the IDRome-o dataset:
 
 1. Download IDRome-o from [https://zenodo.org/records/17306061](https://zenodo.org/records/17306061).
 2. Place the MSA directory in your preferred location
