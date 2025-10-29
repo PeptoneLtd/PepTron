@@ -91,7 +91,7 @@ To download and preprocess the PDB:
 
 ##### IDRome-o Dataset
 
-To download and preprocess the IDRome-o dataset created with [https://github.com/PeptoneLtd/IDP-o](https://github.com/PeptoneLtd/IDP-o):
+To download and preprocess the IDRome-o dataset (samples created with [https://github.com/PeptoneLtd/IDP-o](https://github.com/PeptoneLtd/IDP-o)):
 
 1. Download IDRome-o from [https://zenodo.org/records/17306061](https://zenodo.org/records/17306061).
 2. Place the MSA directory in your preferred location
