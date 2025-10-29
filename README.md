@@ -28,6 +28,9 @@ docker run --gpus all -it --rm peptron:latest
 
 Pre-trained PepTron checkpoints are available for download at [https://zenodo.org/records/17306061](https://zenodo.org/records/17306061).
 
+- `PepTron`: best performance across the whole proteome
+- `PepTron-base`: model pre-trained on the PDB, used for the fine-tuning on disordered regions to get `PepTron`
+
 ## Quick Start
 
 ### Inference
