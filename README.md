@@ -1,14 +1,15 @@
 # PepTron - Multi-domain Protein Ensemble Generator
 
+[![bioRxiv](https://img.shields.io/badge/bioRxiv-2025.10.18.680935-b31b1b.svg)](https://www.biorxiv.org/content/10.1101/2025.10.18.680935v2)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17306061.svg)](https://doi.org/10.5281/zenodo.17306061)
+[![Source Code](https://img.shields.io/badge/-PeptoneBench-000000?style=flat&logo=github&logoColor=ffffff&labelColor=gray)](https://github.com/PeptoneLtd/PeptoneBench) [![Source Code](https://img.shields.io/badge/-IDP--o-000000?style=flat&logo=github&logoColor=ffffff&labelColor=gray)](https://github.com/PeptoneLtd/IDP-o)
+
 PepTron is a sequence to ensemble generative model designed to accurately represent protein ensembles with any level 
 of disorder content.
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17306061.svg)](https://doi.org/10.5281/zenodo.17306061)
-[![bioRxiv](https://img.shields.io/badge/bioRxiv-2025.10.18.680935-b31b1b.svg)](https://www.biorxiv.org/content/10.1101/2025.10.18.680935v2)
+This makes it the ideal choice for multi-domain proteins, which are the most common target class in cutting-edge therapeutics.
 
 ![Demo](assets/peptron.gif)
 
-This makes it the ideal choice for multi-domain proteins, which are the most common target class in cutting-edge therapeutics.
 
 ## Installation
 
@@ -199,15 +200,13 @@ Key parameters for training configuration:
 ## Evaluation
 
 ### PeptoneBench 
-PepTron's performance compared to other structural models can be evaluated using [PeptoneBench](https://github.com/PeptoneLtd/peptonebench). 
+PepTron's performance compared to other structural models can be evaluated using PeptoneBench, [https://github.com/PeptoneLtd/PeptoneBench](https://github.com/PeptoneLtd/peptonebench). 
 
 To run PeptoneBench evaluation with PepTron:
 
-1. Install PeptoneBench following the instructions at [https://github.com/PeptoneLtd/peptonebench](https://github.com/PeptoneLtd/peptonebench)
+1. Install PeptoneBench following the instructions
 2. Generate PepTron ensembles for your target proteins using the inference pipeline above
 3. Use PeptoneBench to evaluate the generated ensembles against experimental observables
-
-For detailed evaluation procedures and benchmark comparisons, please refer to [![Source Code](https://img.shields.io/badge/PeptoneBench-black?logo=github)](https://github.com/PeptoneLtd/peptonebench)
 
 ## Troubleshooting
 
