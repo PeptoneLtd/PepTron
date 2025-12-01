@@ -20,11 +20,11 @@ ENV PYTHONPATH="/openfold2"
 WORKDIR /openfold2
 # Install uv
 RUN pip install uv
-# Uninstall existing Triton and install Triton 3.3.0
+# Uninstall existing Triton and install Triton 3.1.0
 # Install nvidia-ml-py (replacement for deprecated pynvml) for cuequivariance
 RUN pip uninstall -y triton || true && \
     pip uninstall -y pynvml || true && \
-    pip install triton==3.3.0 && \
+    pip install triton==3.1.0 && \
     pip install nvidia-ml-py
 # Install cuequivariance and its CUDA operations
 RUN pip install cuequivariance_torch==0.6.1 && \
