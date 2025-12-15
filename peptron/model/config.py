@@ -233,9 +233,9 @@ def get_config(
         c.model.template.enabled = False
         c.data.common.max_recycling_iters = 0
         c.data.common.use_templates = False
-        c.model.trunk.use_cuequivariance_attention = True
+        c.model.trunk.use_cuequivariance_attention = False
         c.model.trunk.use_cuequivariance_multiplicative_update = False
-        c.model.input_pair_stack.use_cuequivariance_attention = True
+        c.model.input_pair_stack.use_cuequivariance_attention = False
         c.model.input_pair_stack.use_cuequivariance_multiplicative_update = False
     else:
         raise ValueError("Invalid model name")
@@ -460,7 +460,7 @@ config = mlc.ConfigDict(
             "use_lma": False,
             # Use FlashAttention in selected modules. Mutually exclusive with 
             # use_lma. Doesn't work that well on long sequences (>1000 residues).
-            "use_cuequivariance_attention": True,
+            "use_cuequivariance_attention": False,
             "use_cuequivariance_multiplicative_update": False,
             "use_flash": False,
             "offload_inference": False,
@@ -601,7 +601,7 @@ config = mlc.ConfigDict(
                 "pair_transition_n": 2,
                 "dropout_rate": 0.25,
                 "blocks_per_ckpt": 1,
-                "use_cuequivariance_attention": True,
+                "use_cuequivariance_attention": False,
                 "use_cuequivariance_multiplicative_update": False,
             },
             "trunk": { ## ESMFold
@@ -632,7 +632,7 @@ config = mlc.ConfigDict(
                     "epsilon": 1e-8, 
                     "inf": 1e5,
                 },
-                "use_cuequivariance_attention": True,
+                "use_cuequivariance_attention": False,
                 "use_cuequivariance_multiplicative_update": False,
             },
             "evoformer_stack": {

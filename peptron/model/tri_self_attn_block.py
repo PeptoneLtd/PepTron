@@ -30,7 +30,7 @@ class TriangularSelfAttentionBlock(nn.Module):
         sequence_head_width,
         pairwise_head_width,
         dropout=0,
-        use_cuequivariance_attention: bool = True,
+        use_cuequivariance_attention: bool = False,
         use_cuequivariance_multiplicative_update: bool = False,
         **__kwargs,
     ):

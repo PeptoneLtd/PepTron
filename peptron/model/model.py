@@ -539,7 +539,7 @@ class TrunkConfig(iom.IOMixinWithGettersSetters):
     layer_drop: float = 0.0
     cpu_grad_checkpoint: bool = False
     chunk_size: T.Optional[int] = None
-    use_cuequivariance_attention: bool = True
+    use_cuequivariance_attention: bool = False
     use_cuequivariance_multiplicative_update: bool = False
     structure_module: Dict[str, T.Any] = field(default_factory=lambda: {
         "c_s": 384,
