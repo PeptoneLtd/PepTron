@@ -42,7 +42,7 @@ Generate protein structure ensembles from sequences:
 
 Modify the configuration in `peptron/infer.py` if needed (we suggest to keep the default):
 ```python
-EXEC_CONFIG = config_flags.DEFINE_config_file('config', 'peptron/model/config.py:peptron_o_inference_cueq')
+EXEC_CONFIG = config_flags.DEFINE_config_file('config', 'peptron/model/config.py:peptron_o_inference')
 ```
 
 #### 2. Prepare Input

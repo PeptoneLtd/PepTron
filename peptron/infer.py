@@ -48,7 +48,7 @@ torch.backends.cudnn.benchmark = False
 # Apply the patches at module import time
 apply_monkey_patches()
 
-EXEC_CONFIG = config_flags.DEFINE_config_file('config', 'peptron/model/config.py:peptron_o_inference_cueq')
+EXEC_CONFIG = config_flags.DEFINE_config_file('config', 'peptron/model/config.py:peptron_o_inference')
 
 
 __all__: Sequence[str] = ("infer_model",)
@@ -285,7 +285,7 @@ def main(_):
     config.globals.chunk_size = None
     config.globals.use_lma = False
     config.globals.offload_inference = False
-    config.globals.use_cuequivariance_attention = True
+    config.globals.use_cuequivariance_attention = False
     config.globals.use_cuequivariance_multiplicative_update = False
     config.model.template.average_templates = False
     config.model.template.offload_templates = False
