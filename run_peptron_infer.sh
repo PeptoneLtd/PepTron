@@ -19,7 +19,7 @@ python -m peptron.infer \
     --config.inference.chains_path $CSV_FILE \
     --config.inference.results_path $RESULTS_PATH \
     --config.inference.num_gpus 1 \
-    --config.inference.max_batch_size 5 \
+    --config.inference.max_batch_size 1 \
     --config.inference.num_workers 8 \
     --config.inference.samples 10 \
     --config.inference.steps 10
