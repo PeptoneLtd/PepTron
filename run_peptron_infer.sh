@@ -9,9 +9,9 @@ export PYTHONPATH=.
 # num_gpus = min(N, n_gpus_available) with N=len(CSV_FILE)
 # max_batch_size=k*num_gpus with k positive integer and k<=N
 
-CKPT_PATH="/path/to/the/peptron-checkpoint"
-RESULTS_PATH="<path-to-results-dir>"
-CSV_FILE="<path-to-csv-with-sequences-to-be-predicted>"
+CKPT_PATH="/workspace/models/PepTron/peptron-checkpoint"
+RESULTS_PATH="/workspace/results"
+CSV_FILE="/workspace/data/test.csv"
 
 python -m peptron.infer \
     --config.inference.num_nodes 1 \
@@ -19,7 +19,7 @@ python -m peptron.infer \
     --config.inference.chains_path $CSV_FILE \
     --config.inference.results_path $RESULTS_PATH \
     --config.inference.num_gpus 1 \
-    --config.inference.max_batch_size 1 \
+    --config.inference.max_batch_size 5 \
     --config.inference.num_workers 8 \
     --config.inference.samples 10 \
     --config.inference.steps 10

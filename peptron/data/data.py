@@ -348,8 +348,52 @@ class OpenFoldDataset(torch.utils.data.Dataset):
 
 class OpenFoldBatchCollator:
     def __call__(self, prots):
-        stack_fn = lambda x: torch.stack(x, dim=0) if isinstance(x[0], torch.Tensor) else x
-        return dict_multimap(stack_fn, prots) 
+        """
+        Collate a list of OpenFold-style feature dicts into a single batch.
+
+        Many features are padded to a *per-example* fixed size (e.g. predict mode sets
+        crop_size = num_res). When batching multiple proteins, the per-example sizes
+        can differ (L=138 vs L=134), so naive torch.stack fails. Here we pad tensors
+        to the max shape observed in the batch (per key/leaf) and then stack.
+        """
+
+        def pad_and_stack(xs):
+            if not isinstance(xs[0], torch.Tensor):
+                return xs
+
+            # Fast path: already uniform shapes.
+            first_shape = tuple(xs[0].shape)
+            if all(tuple(x.shape) == first_shape for x in xs):
+                return torch.stack(xs, dim=0)
+
+            # Scalars are always stackable.
+            if xs[0].ndim == 0:
+                return torch.stack(xs, dim=0)
+
+            # Require consistent rank; OpenFold features should meet this.
+            nd = xs[0].ndim
+            if any(x.ndim != nd for x in xs):
+                raise RuntimeError(
+                    f"Cannot collate tensors with different ranks: {[tuple(x.shape) for x in xs]}"
+                )
+
+            # Pad each dimension to the maximum size in this batch for this leaf.
+            max_shape = [max(int(x.shape[d]) for x in xs) for d in range(nd)]
+            padded = []
+            for x in xs:
+                if list(x.shape) == max_shape:
+                    padded.append(x)
+                    continue
+                # Create an output tensor filled with zeros (safe default for OpenFold features)
+                # and copy the existing values into the top-left slice.
+                out = x.new_zeros(max_shape)
+                slices = tuple(slice(0, int(s)) for s in x.shape)
+                out[slices] = x
+                padded.append(out)
+
+            return torch.stack(padded, dim=0)
+
+        return dict_multimap(pad_and_stack, prots)
 
 
 def collate_fn(data_list):
