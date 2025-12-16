@@ -69,7 +69,7 @@ class StreamingPredictionWriter(BasePredictionWriter):
                 pdb, prot_name = protein.get_prot_pdb(sample)
                 i = prot_frame_idx[prot_name]
                 os.makedirs(os.path.join(self.output_dir, prot_name), exist_ok=True)
-                pdb_path = os.path.join(self.output_dir, prot_name, f"predictions_rank_{rank}_batch_{batch_idx}_{i}.pt")
+                pdb_path = os.path.join(self.output_dir, prot_name, f"predictions_rank_{rank}_batch_{batch_idx}_{i}.pdb")
                 with open(pdb_path, "w") as f:
                     f.write(protein.prots_to_pdb(pdb))
                 prot_frame_idx[prot_name] += 1
