@@ -35,13 +35,11 @@ class StreamingPredictionWriter(BasePredictionWriter):
             logging.warning("StreamingPredictionWriter: No prediction_uuid found in prediction object.")
             return
 
-        # --- THIS IS THE FIX ---
         # Ensure prediction_uuid is a string, not a list containing a string.
         if isinstance(prediction_uuid_val, list):
             prediction_uuid = prediction_uuid_val[0]
         else:
             prediction_uuid = str(prediction_uuid_val)
-        # --- END OF FIX ---
 
         rank = trainer.global_rank
 
