@@ -72,13 +72,4 @@ python -m peptron.infer \
     --config.inference.samples 10 \
     --config.inference.steps 10
 
-python -m peptron.pt_to_structure -i "$RESULTS_PATH" \
-    -o "$RESULTS_PATH/ensembles" \
-    -p $(($(nproc) / 2))
-
-# comment out the following lines only if you don't need to filter out unphysical conformations
-for directory in "$RESULTS_PATH/ensembles/"; do
-    [ -d "$directory" ] || continue
-    echo "Processing: $directory"
-    python -m peptron.compress_ensemble --pdb-dir "$directory" --filter-unphysical "$1"
-done
+python -m peptron.compress_ensemble --pdb-dir "$RESULTS_PATH" --filter-unphysical
