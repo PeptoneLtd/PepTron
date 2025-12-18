@@ -3,12 +3,15 @@
 [![bioRxiv](https://img.shields.io/badge/bioRxiv-2025.10.18.680935-b31b1b.svg)](https://www.biorxiv.org/content/10.1101/2025.10.18.680935v2)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17306061.svg)](https://doi.org/10.5281/zenodo.17306061)
 [![Source Code](https://img.shields.io/badge/-PeptoneBench-000000?style=flat&logo=github&logoColor=ffffff&labelColor=gray)](https://github.com/PeptoneLtd/PeptoneBench) [![Source Code](https://img.shields.io/badge/-IDP--o-000000?style=flat&logo=github&logoColor=ffffff&labelColor=gray)](https://github.com/PeptoneLtd/IDP-o)
+[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Model-yellow)](https://huggingface.co/spaces/PeptoneLtd/PepTron)
 
 PepTron is a sequence to ensemble generative model designed to accurately represent protein ensembles with any level 
 of disorder content.
 This makes it the ideal choice for multi-domain proteins, which are the most common target class in cutting-edge therapeutics.
 
 ![Demo](assets/peptron.gif)
+
+PepTron is also available as a stand-alone application on [HuggingFace](https://huggingface.co/spaces/PeptoneLtd/PepTron)!
 
 
 ## Installation
