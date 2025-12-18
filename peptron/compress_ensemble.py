@@ -2,7 +2,7 @@ import argparse
 import logging
 import glob
 import os
-import MDAanlysis as mda
+import MDAnalysis as mda
 import mdtraj as md
 from peptron.utils.filter_unphysical_traj import filter_unphysical_traj
 
