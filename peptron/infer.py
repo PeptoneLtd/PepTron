@@ -216,8 +216,7 @@ def infer_model(
         temp_file_paths = []
         rank = self.trainer.global_rank
         
-        # --- The Core of the New Solution ---
-        # Create a single, unique ID for this entire prediction call (i.e., for this one sequence).
+        # Create a single, unique ID for this entire prediction call.
         prediction_uuid = uuid.uuid4()
 
         with torch.no_grad():

@@ -7,6 +7,8 @@ import lightning.pytorch as pl
 import torch
 from lightning.pytorch.callbacks import BasePredictionWriter
 from peptron.utils.util import expand_tensors_in_list
+from peptron.data import protein
+from collections import defaultdict
 
 class StreamingPredictionWriter(BasePredictionWriter):
     """
@@ -35,13 +37,11 @@ class StreamingPredictionWriter(BasePredictionWriter):
             logging.warning("StreamingPredictionWriter: No prediction_uuid found in prediction object.")
             return
 
-        # --- THIS IS THE FIX ---
         # Ensure prediction_uuid is a string, not a list containing a string.
         if isinstance(prediction_uuid_val, list):
             prediction_uuid = prediction_uuid_val[0]
         else:
             prediction_uuid = str(prediction_uuid_val)
-        # --- END OF FIX ---
 
         rank = trainer.global_rank
 
@@ -54,21 +54,25 @@ class StreamingPredictionWriter(BasePredictionWriter):
             logging.warning(f"No temporary files found for pattern: {temp_file_pattern}")
             return
 
-        # Load all data chunks from the temporary files
-        all_chunks = []
-        for temp_path in temp_files:
-            all_chunks.append(torch.load(temp_path))
-            os.remove(temp_path)
+        first_chunk = torch.load(temp_files[0])
+        keys = list(first_chunk.keys())
+        final_prediction = {k: [] for k in keys}
 
-        # Collate the chunks into one final prediction object
-        final_prediction = {}
-        for key in all_chunks[0].keys():
-            vals = [chunk[key] for chunk in all_chunks]
-            final_prediction[key] = expand_tensors_in_list(vals)
-
-        result_path = os.path.join(self.output_dir, f"predictions__rank_{rank}__batch_{batch_idx}.pt")
         final_prediction["batch_idx"] = torch.tensor([batch_idx], dtype=torch.int64)
 
-        torch.save(final_prediction, result_path)
-        logging.info(f"Finalized memory-safe prediction for batch {batch_idx} to {result_path}")
+        prot_frame_idx = defaultdict(int)
+        for idx, temp_path in enumerate(temp_files):
+            chunk = torch.load(temp_path)
+            for sample in expand_tensors_in_list([chunk['interpolations']]):
+                pdb, prot_name = protein.get_prot_pdb(sample)
+                i = prot_frame_idx[prot_name]
+                os.makedirs(os.path.join(self.output_dir, prot_name), exist_ok=True)
+                pdb_path = os.path.join(self.output_dir, prot_name, f"predictions_rank_{rank}_batch_{batch_idx}_{i}.pdb")
+                with open(pdb_path, "w") as f:
+                    f.write(protein.prots_to_pdb(pdb))
+                prot_frame_idx[prot_name] += 1
+            del chunk
+            os.remove(temp_path)
+
+        logging.info(f"Finalized memory-safe prediction for batch {batch_idx}")
 
