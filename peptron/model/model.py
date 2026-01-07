@@ -739,14 +739,22 @@ def get_esmfoldconfig(config: ConfigDict,
     )
     trunk_config_dict = dict(**config.model.trunk)
     del trunk_config_dict["structure_module"]
+    # Explicitly override cuequivariance settings (ml_collections dict unpacking may not capture modified values)
+    trunk_config_dict['use_cuequivariance_attention'] = config.model.trunk.use_cuequivariance_attention
+    trunk_config_dict['use_cuequivariance_multiplicative_update'] = config.model.trunk.use_cuequivariance_multiplicative_update
     trunk_config = TrunkConfig(
         structure_module=structure_module_config,
         **trunk_config_dict
     )
+    #print(f"[CUEQ] get_esmfoldconfig: trunk_config.use_cuequivariance_attention = {trunk_config.use_cuequivariance_attention}")
     input_pair_embedder_config = InputPairEmbedderConfig(
         **config.model.input_pair_embedder
     )
     input_pair_stack_config = dict(**config.model.input_pair_stack)
+    # Explicitly override cuequivariance settings (ml_collections dict unpacking may not capture modified values)
+    input_pair_stack_config['use_cuequivariance_attention'] = config.model.input_pair_stack.use_cuequivariance_attention
+    input_pair_stack_config['use_cuequivariance_multiplicative_update'] = config.model.input_pair_stack.use_cuequivariance_multiplicative_update
+    #print(f"[CUEQ] get_esmfoldconfig: input_pair_stack_config['use_cuequivariance_attention'] = {input_pair_stack_config['use_cuequivariance_attention']}")
     evoformer_stack_config = EvoformerStackConfig(
         **config.model.evoformer_stack
     )

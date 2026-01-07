@@ -71,6 +71,8 @@ class FoldingTrunk(nn.Module):
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
+        # Log what TrunkConfig contains for cuequivariance
+        #print(f"[CUEQ] FoldingTrunk.__init__: cfg.use_cuequivariance_attention = {self.cfg.use_cuequivariance_attention}")
         # assert self.cfg.max_recycles > 0
 
         c_s = self.cfg.sequence_state_dim

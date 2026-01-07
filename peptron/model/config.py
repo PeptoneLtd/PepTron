@@ -850,7 +850,8 @@ config = mlc.ConfigDict(
             "prediction_interval": "epoch", # or "step"
             "pdb_id": [],
             "runtime_json": "",
-            "config_class": "ESMFoldSeqConfig" # or "ESM2Config",
+            "config_class": "ESMFoldSeqConfig", # or "ESM2Config"
+            "use_cuequivariance": True,  # True to enable cuequivariance, False to disable
         }
     }
 )
