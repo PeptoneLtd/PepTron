@@ -32,7 +32,6 @@ from peptron.utils.tensor_utils import tensor_tree_map
 from peptron.model import flowmoco as flow
 from bionemo.llm.model.biobert.lightning import biobert_lightning_module
 from types import MethodType
-from pytorch_lightning.callbacks import Callback
 
 
 # Import global cuequivariance override settings from separate module to avoid circular imports
