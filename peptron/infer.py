@@ -299,7 +299,7 @@ def main(_):
     config.globals.offload_inference = False
     # Enable/disable cuEquivariance attention uniformly across all model components
     # use_cuequivariance: True = enable, False = disable (applies to all components)
-    cueq_setting = config.inference.use_cuequivariance
+    cueq_setting = config.inference.get('use_cuequivariance', False)
     config.globals.use_cuequivariance_attention = cueq_setting
     config.globals.use_cuequivariance_multiplicative_update = False
     config.model.trunk.use_cuequivariance_attention = cueq_setting
