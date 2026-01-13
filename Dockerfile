@@ -38,4 +38,3 @@ RUN python -c "import sys; print(sys.path)" && \
     python -c "import openfold; print(openfold.__file__)"
 # Set the default command to start a bash shell
 CMD ["/bin/bash"]
-
