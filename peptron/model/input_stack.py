@@ -35,6 +35,7 @@ from openfold.model.triangular_multiplicative_update import (
 from openfold.utils.checkpointing import checkpoint_blocks
 from openfold.utils.chunk_utils import ChunkSizeTuner
 from openfold.utils.tensor_utils import add
+from peptron.cueq_override import _CUEQ_ATTN_OVERRIDE, _CUEQ_MUL_OVERRIDE
 
 
 class InputPairStackBlock(nn.Module):
@@ -47,7 +48,7 @@ class InputPairStackBlock(nn.Module):
         pair_transition_n: int,
         dropout_rate: float,
         inf: float,
-        use_cuequivariance_attention: bool = True,
+        use_cuequivariance_attention: bool = False,
         use_cuequivariance_multiplicative_update: bool = False,
         **kwargs,
     ):
@@ -93,23 +94,27 @@ class InputPairStackBlock(nn.Module):
         self.use_cuequivariance_attention = use_cuequivariance_attention
         self.use_cuequivariance_multiplicative_update = use_cuequivariance_multiplicative_update
 
-    def forward(self, 
-        z: torch.Tensor, 
-        mask: torch.Tensor, 
-        chunk_size: Optional[int] = None, 
+    def forward(self,
+        z: torch.Tensor,
+        mask: torch.Tensor,
+        chunk_size: Optional[int] = None,
         use_lma: bool = False,
         inplace_safe: bool = False,
         _mask_trans: bool = True,
         _attn_chunk_size: Optional[int] = None,
-        use_cuequivariance_attention: bool = True,
+        use_cuequivariance_attention: bool = False,
         use_cuequivariance_multiplicative_update: bool = False,
     ):
+        # Use global override if set (workaround for checkpoint loading overwriting config)
+        use_cueq_attn = _CUEQ_ATTN_OVERRIDE if _CUEQ_ATTN_OVERRIDE is not None else self.use_cuequivariance_attention
+        use_cueq_mul = _CUEQ_MUL_OVERRIDE if _CUEQ_MUL_OVERRIDE is not None else self.use_cuequivariance_multiplicative_update
+
         if(_attn_chunk_size is None):
             _attn_chunk_size = chunk_size
 
         single = z #  single_templates[i]
         single_mask = mask # single_templates_masks[i]
-        
+
         single = add(single,
             self.dropout_row(
                 self.tri_att_start(
@@ -118,7 +123,7 @@ class InputPairStackBlock(nn.Module):
                     mask=single_mask,
                     use_lma=use_lma,
                     inplace_safe=inplace_safe,
-                    use_cuequivariance_attention=self.use_cuequivariance_attention,
+                    use_cuequivariance_attention=use_cueq_attn,
                 )
             ),
             inplace_safe,
@@ -132,7 +137,7 @@ class InputPairStackBlock(nn.Module):
                     mask=single_mask,
                     use_lma=use_lma,
                     inplace_safe=inplace_safe,
-                    use_cuequivariance_attention=self.use_cuequivariance_attention,
+                    use_cuequivariance_attention=use_cueq_attn,
                 )
             ),
             inplace_safe,
@@ -143,13 +148,13 @@ class InputPairStackBlock(nn.Module):
             mask=single_mask,
             inplace_safe=inplace_safe,
             _add_with_inplace=True,
-            use_cuequivariance_multiplicative_update=self.use_cuequivariance_multiplicative_update,
+            use_cuequivariance_multiplicative_update=use_cueq_mul,
         )
         if(not inplace_safe):
             single = single + self.dropout_row(tmu_update)
         else:
             single = tmu_update
-        
+
         del tmu_update
 
         tmu_update = self.tri_mul_in(
@@ -157,7 +162,7 @@ class InputPairStackBlock(nn.Module):
             mask=single_mask,
             inplace_safe=inplace_safe,
             _add_with_inplace=True,
-            use_cuequivariance_multiplicative_update=self.use_cuequivariance_multiplicative_update,
+            use_cuequivariance_multiplicative_update=use_cueq_mul,
         )
         if(not inplace_safe):
             single = single + self.dropout_row(tmu_update)
@@ -194,7 +199,7 @@ class InputPairStack(nn.Module):
         blocks_per_ckpt,
         tune_chunk_size: bool = False,
         inf=1e9,
-        use_cuequivariance_attention: bool = True,
+        use_cuequivariance_attention: bool = False,
         use_cuequivariance_multiplicative_update: bool = False,
         **kwargs,
     ):

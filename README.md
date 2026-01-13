@@ -189,6 +189,8 @@ Key parameters you can modify in the inference configuration:
 as safe configuration but we encourage to increase it based on your GPU memory and max-sequence-length. The bigger the
 ensemble you want to generate and the more you want to increase this parameter.
 
+**NOTE3:** Activate cuEquivariance `use_cuequivariance=True` in `config.py` for enhanced inference speed.
+
 ### Training Parameters
 
 Key parameters for training configuration:

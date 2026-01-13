@@ -20,6 +20,7 @@ from peptron.model.layers import (
     ResidueMLP,
     SequenceToPair,
 )
+from peptron.cueq_override import _CUEQ_ATTN_OVERRIDE, _CUEQ_MUL_OVERRIDE
 
 
 class TriangularSelfAttentionBlock(nn.Module):
@@ -107,6 +108,7 @@ class TriangularSelfAttentionBlock(nn.Module):
         
         self.use_cuequivariance_attention = use_cuequivariance_attention
         self.use_cuequivariance_multiplicative_update = use_cuequivariance_multiplicative_update
+        self._logged_cueq = False  # Flag to log only once
 
     def forward(self, sequence_state, pairwise_state, mask=None, chunk_size=None, **__kwargs):
         """
@@ -119,6 +121,14 @@ class TriangularSelfAttentionBlock(nn.Module):
           sequence_state: B x L x sequence_state_dim
           pairwise_state: B x L x L x pairwise_state_dim
         """
+        # Use global override if set (workaround for checkpoint loading overwriting config)
+        use_cueq_attn = _CUEQ_ATTN_OVERRIDE if _CUEQ_ATTN_OVERRIDE is not None else self.use_cuequivariance_attention
+        use_cueq_mul = _CUEQ_MUL_OVERRIDE if _CUEQ_MUL_OVERRIDE is not None else self.use_cuequivariance_multiplicative_update
+
+        # Log cuequivariance setting on first forward call
+        if not self._logged_cueq:
+            #print(f"[CUEQ] TriangularSelfAttentionBlock.forward: use_cuequivariance_attention={use_cueq_attn} (override={_CUEQ_ATTN_OVERRIDE})")
+            self._logged_cueq = True
         assert len(sequence_state.shape) == 3
         assert len(pairwise_state.shape) == 4
         if mask is not None:
@@ -148,32 +158,32 @@ class TriangularSelfAttentionBlock(nn.Module):
         tri_mask = mask.unsqueeze(2) * mask.unsqueeze(1) if mask is not None else None
         pairwise_state = pairwise_state + self.row_drop(
             self.tri_mul_out(
-                pairwise_state, 
+                pairwise_state,
                 mask=tri_mask,
-                use_cuequivariance_multiplicative_update=self.use_cuequivariance_multiplicative_update,
+                use_cuequivariance_multiplicative_update=use_cueq_mul,
                 )
         )
         pairwise_state = pairwise_state + self.col_drop(
             self.tri_mul_in(
-                pairwise_state, 
+                pairwise_state,
                 mask=tri_mask,
-                use_cuequivariance_multiplicative_update=self.use_cuequivariance_multiplicative_update,
+                use_cuequivariance_multiplicative_update=use_cueq_mul,
                 )
         )
         pairwise_state = pairwise_state + self.row_drop(
             self.tri_att_start(
-                pairwise_state, 
-                mask=tri_mask, 
+                pairwise_state,
+                mask=tri_mask,
                 chunk_size=chunk_size,
-                use_cuequivariance_attention=self.use_cuequivariance_attention,
+                use_cuequivariance_attention=use_cueq_attn,
                 )
         )
         pairwise_state = pairwise_state + self.col_drop(
             self.tri_att_end(
-                pairwise_state, 
-                mask=tri_mask, 
+                pairwise_state,
+                mask=tri_mask,
                 chunk_size=chunk_size,
-                use_cuequivariance_attention=self.use_cuequivariance_attention,
+                use_cuequivariance_attention=use_cueq_attn,
                 )
         )
 

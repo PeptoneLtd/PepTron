@@ -1,4 +1,4 @@
-  #!/bin/bash
+#!/bin/bash
 
 export NCCL_TIMEOUT=3600
 export TORCH_NCCL_ENABLE_MONITORING=0
@@ -12,7 +12,7 @@ export PYTHONPATH=.
 CHECKPOINT_PATH="/path/to/the/peptron-checkpoint"
 RESULTS_PATH="results"
 INPUT_CSV=""
-FILTER_UNPHYSICAL=false
+FILTER_UNPHYSICAL=true
 
 OPTS=$(getopt \
     --longoptions "input:,checkpoint:,results:,filter-unphysical" \
