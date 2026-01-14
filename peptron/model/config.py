@@ -843,7 +843,7 @@ config = mlc.ConfigDict(
             "pdb_id": [],
             "runtime_json": "",
             "config_class": "ESMFoldSeqConfig", # or "ESM2Config",
-            "use_cuequivariance": False,
+            "use_cuequivariance": True,
         }
     }
 )

@@ -102,8 +102,6 @@ class InputPairStackBlock(nn.Module):
         inplace_safe: bool = False,
         _mask_trans: bool = True,
         _attn_chunk_size: Optional[int] = None,
-        use_cuequivariance_attention: bool = False,
-        use_cuequivariance_multiplicative_update: bool = False,
     ):
         # Use global override if set (workaround for checkpoint loading overwriting config)
         use_cueq_attn = _CUEQ_ATTN_OVERRIDE if _CUEQ_ATTN_OVERRIDE is not None else self.use_cuequivariance_attention

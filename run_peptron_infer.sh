@@ -70,7 +70,7 @@ python -m peptron.infer \
     --config.inference.pipeline_model_parallel_size 1 \
     --config.inference.tensor_model_parallel_size 1 \
     --config.inference.micro_batch_size 1 \
-    --config.inference.max_batch_size 48 \
+    --config.inference.max_batch_size 1 \
     --config.inference.num_workers 8 \
     --config.inference.samples 10 \
     --config.inference.steps 10 \
@@ -78,4 +78,3 @@ python -m peptron.infer \
 
 for d in $RESULTS_PATH/*/; do
   python -m peptron.compress_ensemble --pdb-dir "$d" --filter-unphysical
-done
