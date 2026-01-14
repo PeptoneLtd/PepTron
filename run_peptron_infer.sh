@@ -78,3 +78,4 @@ python -m peptron.infer \
 
 for d in $RESULTS_PATH/*/; do
   python -m peptron.compress_ensemble --pdb-dir "$d" --filter-unphysical
+done
