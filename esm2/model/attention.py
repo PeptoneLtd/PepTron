@@ -54,6 +54,7 @@ class ESM2TEDotProductAttention(TEDotProductAttention):
         k_channels: int | None = None,
         v_channels: int | None = None,
         cp_comm_type: str = "p2p",
+        model_comm_pgs=None,  # Added for BioNeMo 2.7+ / Megatron-Core compatibility
     ):
         """Initialize ESM2TEDotProductAttention."""
         self.config = config
@@ -168,6 +169,7 @@ class ESM2DotProductAttention(DotProductAttention):
         attn_mask_type: AttnMaskType,
         attention_type: str,
         attention_dropout: Optional[float] = None,
+        model_comm_pgs=None,  # Added for BioNeMo 2.7+ / Megatron-Core compatibility
     ) -> None:
         """Initializes the Attention class.
 
@@ -177,6 +179,7 @@ class ESM2DotProductAttention(DotProductAttention):
             attn_mask_type: The type of attention mask to be used.
             attention_type: The type of attention mechanism.
             attention_dropout: The dropout rate for attention weights. Defaults to None.
+            model_comm_pgs: Model communication process groups (for Megatron-Core compatibility).
         """
         super().__init__(
             config=config,

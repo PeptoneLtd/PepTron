@@ -1,6 +1,5 @@
-# Use the BioNeMo Framework image as the base
-FROM nvcr.io/nvidia/clara/bionemo-framework:2.3 AS openfold-bionemo-image
-# Switch to root user to perform system-level operations
+FROM nvcr.io/nvidia/clara/bionemo-framework:2.7.1 AS openfold-bionemo-image
+
 USER root
 # Install build dependencies
 RUN apt-get update && \
@@ -20,12 +19,8 @@ ENV PYTHONPATH="/openfold2"
 WORKDIR /openfold2
 # Install uv
 RUN pip install uv
-# Uninstall existing Triton and install Triton 3.1.0
-# Install nvidia-ml-py (replacement for deprecated pynvml) for cuequivariance
-RUN pip uninstall -y triton || true && \
-    pip uninstall -y pynvml || true && \
-    pip install triton==3.1.0 && \
-    pip install nvidia-ml-py
+RUN pip install nvidia-ml-py
+
 # Install cuequivariance and its CUDA operations
 RUN pip install cuequivariance_torch==0.8.0 && \
     pip install cuequivariance-ops-torch-cu12==0.8.0
@@ -33,7 +28,7 @@ RUN pip install cuequivariance_torch==0.8.0 && \
 RUN uv pip install --upgrade pip && \
     uv pip install --no-cache-dir wheel setuptools && \
     uv pip install --no-cache-dir --no-build-isolation -e . && \
-    uv pip install --no-cache-dir biopython==1.85 mdtraj==1.11.0 modelcif==1.5 ml_collections==1.1.0 bionemo-moco==0.0.2.2 mdanalysis
+    uv pip install --no-cache-dir biopython==1.86 mdanalysis==2.10.0 mdtraj==1.11.0 modelcif==1.6 ml_collections==1.1.0 bionemo-moco==0.0.2.2 
 RUN touch /openfold2/openfold/__init__.py
 # Download stereo_chemical_props.txt
 RUN wget https://git.scicore.unibas.ch/schwede/openstructure/-/raw/7102c63615b64735c4941278d92b554ec94415f8/modules/mol/alg/src/stereo_chemical_props.txt && \

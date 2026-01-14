@@ -229,14 +229,6 @@ def get_config(
         c.model.template.enabled = False
         c.data.common.max_recycling_iters = 0
         c.data.common.use_templates = False
-    elif name == "peptron_o_inference_cueq":   
-        c.model.template.enabled = False
-        c.data.common.max_recycling_iters = 0
-        c.data.common.use_templates = False
-        c.model.trunk.use_cuequivariance_attention = False
-        c.model.trunk.use_cuequivariance_multiplicative_update = False
-        c.model.input_pair_stack.use_cuequivariance_attention = False
-        c.model.input_pair_stack.use_cuequivariance_multiplicative_update = False
     else:
         raise ValueError("Invalid model name")
 
@@ -850,7 +842,8 @@ config = mlc.ConfigDict(
             "prediction_interval": "epoch", # or "step"
             "pdb_id": [],
             "runtime_json": "",
-            "config_class": "ESMFoldSeqConfig" # or "ESM2Config",
+            "config_class": "ESMFoldSeqConfig", # or "ESM2Config",
+            "use_cuequivariance": True,
         }
     }
 )

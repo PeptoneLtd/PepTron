@@ -446,8 +446,19 @@ class ESM2Model(MegatronBioBertModel):
             else:
                 for l_no, layer in enumerate(self.encoder.layers):
                     with self.encoder.offload_context:
-                        layer.use_cudagraph = True
-                        if (len(self.encoder.cuda_graphs) == 0) or (not self.encoder.training):
+                        # Check if use_cudagraph is supported (not available in newer Megatron-Core)
+                        if hasattr(layer, 'use_cudagraph'):
+                            layer.use_cudagraph = True
+                        
+                        # Check if cuda_graphs is supported (not available in newer Megatron-Core)
+                        has_cuda_graphs = hasattr(self.encoder, 'cuda_graphs')
+                        use_standard_forward = (
+                            not has_cuda_graphs or 
+                            (has_cuda_graphs and len(self.encoder.cuda_graphs) == 0) or 
+                            not self.encoder.training
+                        )
+                        
+                        if use_standard_forward:
                             hidden_states, context = layer(
                                 hidden_states=hidden_states,
                                 attention_mask=attention_mask,

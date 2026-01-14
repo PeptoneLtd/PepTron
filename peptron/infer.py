@@ -34,6 +34,11 @@ from bionemo.llm.model.biobert.lightning import biobert_lightning_module
 from types import MethodType
 
 
+# Import global cuequivariance override settings from separate module to avoid circular imports
+from peptron.cueq_override import _CUEQ_ATTN_OVERRIDE, _CUEQ_MUL_OVERRIDE
+import peptron.cueq_override as cueq_override
+
+
 # Import and apply monkey patches to fix tensor collation issues
 from peptron.monkey_patch import apply_monkey_patches
 from ml_collections import config_flags, ConfigDict
@@ -48,7 +53,11 @@ torch.backends.cudnn.benchmark = False
 # Apply the patches at module import time
 apply_monkey_patches()
 
-EXEC_CONFIG = config_flags.DEFINE_config_file('config', 'peptron/model/config.py:peptron_o_inference')
+# Only define config flag when running as main module to avoid duplicate flag errors
+# when this module is imported by other code
+EXEC_CONFIG = None
+if __name__ == "__main__":
+    EXEC_CONFIG = config_flags.DEFINE_config_file('config', 'peptron/model/config.py:peptron_o_inference')
 
 
 __all__: Sequence[str] = ("infer_model",)
@@ -133,6 +142,10 @@ def infer_model(
 
     prediction_writer = StreamingPredictionWriter(output_dir=results_path, write_interval=prediction_interval)
 
+    # Set global cuequivariance overrides (used by TriangularSelfAttentionBlock.forward)
+    cueq_override._CUEQ_ATTN_OVERRIDE = runtime_config.globals.use_cuequivariance_attention
+    cueq_override._CUEQ_MUL_OVERRIDE = runtime_config.globals.use_cuequivariance_multiplicative_update
+    #print(f"[CUEQ] Set global override: _CUEQ_ATTN_OVERRIDE={cueq_override._CUEQ_ATTN_OVERRIDE}")
 
     trainer = nl.Trainer(
         accelerator="gpu",
@@ -254,7 +267,7 @@ def infer_model(
 
     module = biobert_lightning_module(
         config=esmfold_config,
-        tokenizer=tokenizer, 
+        tokenizer=tokenizer,
         data_step=structure_data_step,
         forward_step=structure_forward_step,
     )
@@ -284,8 +297,13 @@ def main(_):
     config.globals.chunk_size = None
     config.globals.use_lma = False
     config.globals.offload_inference = False
-    config.globals.use_cuequivariance_attention = False
-    config.globals.use_cuequivariance_multiplicative_update = False
+    cueq_setting = config.inference.get('use_cuequivariance', False)
+    config.globals.use_cuequivariance_attention = cueq_setting
+    config.globals.use_cuequivariance_multiplicative_update = cueq_setting
+    config.model.trunk.use_cuequivariance_attention = cueq_setting
+    config.model.trunk.use_cuequivariance_multiplicative_update = cueq_setting
+    config.model.input_pair_stack.use_cuequivariance_attention = cueq_setting
+    config.model.input_pair_stack.use_cuequivariance_multiplicative_update = cueq_setting
     config.model.template.average_templates = False
     config.model.template.offload_templates = False
 
